@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+const router = useRouter();
+
+function voteRand() {
+  router.push(`/vote/${Math.ceil(Math.random() * 100)}`);
+}
 </script>
 
 <template>
   <main>
     <div class="title">What would you pay?</div>
-    Let us know what you would pay for these video games
-    <RouterLink to="/vote/132532423423423"
-      ><button class="primary">Start</button></RouterLink
+    Let us know what you would pay for these video games ><button
+      class="primary"
+      @click="voteRand"
     >
+      Start
+    </button>
   </main>
 </template>
 

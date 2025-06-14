@@ -24,6 +24,7 @@ watch(() => route.params.id, fetchData, { immediate: true });
 async function fetchData(id: string | string[]) {
   prompt.value = null;
   loading.value = true;
+  price.value = 0;
 
   try {
     // replace `getPost` with your data fetching util / API wrapper
@@ -49,8 +50,7 @@ async function postData() {
         'Content-type': 'application/json; charset=UTF-8',
       },
     }).then((response) => {
-      console.log(response);
-      router.push('/vote/1');
+      router.push(`/vote/${Math.ceil(Math.random() * 100)}`);
     });
   } catch (err: any) {
     error.value = err.toString();
