@@ -28,9 +28,11 @@ async function fetchData(id: string | string[]) {
 
   try {
     // replace `getPost` with your data fetching util / API wrapper
-    await fetch(`http://localhost:5197/prompt/${route.params.id}`)
+    await fetch(
+      `${import.meta.env.VITE_API_ENDPOINT}/prompt/${route.params.id}`
+    )
       .then((response) => response.json())
-      .then((data) => (prompt.value = data.promptText));
+      .then((data) => (prompt.value = data.rows[0].gameprompt));
   } catch (err: any) {
     error.value = err.toString();
   } finally {
@@ -40,7 +42,7 @@ async function fetchData(id: string | string[]) {
 
 async function postData() {
   try {
-    await fetch(`http://localhost:5197/postPrice`, {
+    await fetch(`${import.meta.env.VITE_API_ENDPOINT}/postPrice`, {
       method: 'POST',
       body: JSON.stringify({
         id: route.params.id,
