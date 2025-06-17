@@ -10,7 +10,7 @@ function voteRand() {
 <template>
   <main>
     <div class="title">What would you pay?</div>
-    Let us know what you would pay for these video games ><button
+    Let us know what you would pay for these video games<button
       class="primary"
       @click="voteRand"
     >

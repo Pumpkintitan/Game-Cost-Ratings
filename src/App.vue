@@ -3,6 +3,11 @@ import { RouterLink, RouterView } from 'vue-router';
 </script>
 
 <template>
+  <header>
+    <a href="/">
+      <img src="/W.png" alt="logo" />
+    </a>
+  </header>
   <div class="contatiner">
     <RouterView />
   </div>
@@ -52,5 +57,20 @@ a {
 
 p {
   margin: 0;
+}
+
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: 95px;
+}
+
+img {
+  padding: 10px;
+  width: 75px;
+  height: 75px;
 }
 </style>

@@ -2,20 +2,23 @@
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-const price = ref(0);
+const price = ref('');
 const loading = ref(false);
 const route = useRoute();
 const router = useRouter();
 const prompt = ref<any>(null);
 const error = ref(null);
+const submitted = ref(false);
+const results = ref<any>(null);
 
 watch(price, (newPrice) => {
-  if (newPrice > 100) {
-    price.value = 100;
-  } else if (newPrice < 0) {
-    price.value = 0;
-  } else {
-    price.value = newPrice;
+  if (newPrice === '') return;
+
+  const numericPrice = Number(newPrice);
+  if (numericPrice > 100) {
+    price.value = '100';
+  } else if (numericPrice < 0) {
+    price.value = '0';
   }
 });
 
@@ -24,15 +27,16 @@ watch(() => route.params.id, fetchData, { immediate: true });
 async function fetchData(id: string | string[]) {
   prompt.value = null;
   loading.value = true;
-  price.value = 0;
+  price.value = '';
+  submitted.value = false;
+  results.value = null;
 
   try {
-    // replace `getPost` with your data fetching util / API wrapper
-    await fetch(
+    const response = await fetch(
       `${import.meta.env.VITE_API_ENDPOINT}/prompt/${route.params.id}`
-    )
-      .then((response) => response.json())
-      .then((data) => (prompt.value = data.rows[0].gameprompt));
+    );
+    const data = await response.json();
+    prompt.value = data.rows[0].gameprompt;
   } catch (err: any) {
     error.value = err.toString();
   } finally {
@@ -41,24 +45,41 @@ async function fetchData(id: string | string[]) {
 }
 
 async function postData() {
+  loading.value = true;
   try {
     await fetch(`${import.meta.env.VITE_API_ENDPOINT}/postPrice`, {
       method: 'POST',
       body: JSON.stringify({
         id: route.params.id,
-        price: price.value,
+        price: Number(price.value),
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
-    }).then((response) => {
-      router.push(`/vote/${Math.ceil(Math.random() * 100)}`);
     });
+    submitted.value = true;
+    await fetchResults();
   } catch (err: any) {
     error.value = err.toString();
   } finally {
     loading.value = false;
   }
+}
+
+async function fetchResults() {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ENDPOINT}/result/${route.params.id}`
+    );
+    const data = await response.json();
+    results.value = data;
+  } catch (err: any) {
+    error.value = err.toString();
+  }
+}
+
+function goToNextPrompt() {
+  router.push(`/vote/${Math.ceil(Math.random() * 100)}`);
 }
 </script>
 
@@ -68,15 +89,35 @@ async function postData() {
     <div class="game" v-if="prompt">
       {{ prompt }}
     </div>
-    <div class="pricebar">
-      $<input type="number" v-model="price" /><button
-        class="primary"
-        @click="postData"
-      >
+    <div class="pricebar" v-if="!submitted">
+      $<input
+        type="number"
+        v-model="price"
+        placeholder="0"
+        :disabled="submitted"
+      />&nbsp;
+      <button class="primary" @click="postData" v-if="!submitted">
         Submit
       </button>
     </div>
-    <p>Choose a price between $0 - $100</p>
+    <p v-if="!submitted">Choose a price between $0 - $100</p>
+    <div v-if="submitted && results" class="results">
+      <h3>Results:</h3>
+      <div><strong>Your Price:</strong> ${{ Number(price).toFixed(2) }}</div>
+      <div>
+        <strong>Average Price:</strong> ${{
+          (
+            results.ratings.reduce((a: number, b: number) => a + b) /
+            results.ratings.length
+          ).toFixed(2)
+        }}
+      </div>
+      <div><strong>Total Votes:</strong> {{ results.ratings.length }}</div>
+    </div>
+
+    <button class="primary" @click="goToNextPrompt" v-if="submitted">
+      Next
+    </button>
   </main>
 </template>
 
@@ -105,6 +146,14 @@ input[type='number'] {
   font-size: 40px;
   color: #f7c59f;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.results {
+  font-size: 30px;
+  color: #f7c59f;
+  flex-direction: column;
   display: flex;
   align-items: center;
 }
