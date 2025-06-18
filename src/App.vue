@@ -29,10 +29,10 @@ import { RouterLink, RouterView } from 'vue-router';
 
 <style scoped>
 footer {
-  position: fixed;
   font-size: 18px;
-  bottom: 0;
   height: 100px;
+  position: fixed;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -57,10 +57,11 @@ a {
 
 p {
   margin: 0;
+  text-align: center;
 }
 
 header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   display: flex;

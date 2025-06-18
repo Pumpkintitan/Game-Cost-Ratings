@@ -135,6 +135,7 @@ input[type='number'] {
   font-size: 60px;
   color: #f7c59f;
   font-weight: 600;
+  text-align: center;
 }
 .game {
   font-size: 40px;
@@ -183,5 +184,69 @@ main {
   align-items: center;
   justify-content: center;
   gap: 24px;
+  padding: 20px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .title {
+    font-size: 36px;
+  }
+
+  .game {
+    font-size: 24px;
+  }
+
+  .pricebar {
+    font-size: 24px;
+    gap: 8px;
+  }
+
+  .results {
+    font-size: 20px;
+  }
+
+  .primary {
+    font-size: 20px;
+    padding: 12px 18px;
+  }
+
+  input {
+    font-size: 24px;
+    height: 32px;
+  }
+
+  main {
+    gap: 16px;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .title {
+    font-size: 28px;
+  }
+
+  .game {
+    font-size: 20px;
+  }
+
+  .pricebar {
+    font-size: 20px;
+  }
+
+  .results {
+    font-size: 18px;
+  }
+
+  .primary {
+    font-size: 18px;
+    padding: 10px 16px;
+  }
+
+  input {
+    font-size: 20px;
+    height: 28px;
+  }
 }
 </style>

@@ -10,12 +10,8 @@ function voteRand() {
 <template>
   <main>
     <div class="title">What would you pay?</div>
-    Let us know what you would pay for these video games<button
-      class="primary"
-      @click="voteRand"
-    >
-      Start
-    </button>
+    <p>Let us know what you would pay for these video games</p>
+    <button class="primary" @click="voteRand">Start</button>
   </main>
 </template>
 
@@ -32,6 +28,10 @@ main {
   font-size: 60px;
   color: #f7c59f;
   font-weight: 600;
+  text-align: center;
+}
+p {
+  text-align: center;
 }
 .primary {
   transition: 0.3s;
